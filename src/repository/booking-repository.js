@@ -21,4 +21,5 @@ const createBooking = async (data) => {
     }
 }
 
+
 module.exports = { createBooking };

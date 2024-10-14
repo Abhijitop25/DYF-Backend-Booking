@@ -5,7 +5,7 @@ const ServiceError = require('../utils/errors/service-error.js');
 
 async function createBookingService(data) {
     try{
-        const flightId = data.id;
+        const flightId = data.flightId;
         const getFlightUrl = `${FLIGHT_SERVICE_URL}/api/v1/xyz/${flightId}`;
         console.log(getFlightUrl);
         const response = await axios.get(getFlightUrl);
@@ -19,6 +19,8 @@ async function createBookingService(data) {
         const booking = await createBooking(bookingPayload);
         const updateFlightRequestURL = `${FLIGHT_SERVICE_URL}/api/v1/flights/${flightId}`;
         await axios.patch(updateFlightRequestURL, { totalSeats: flight.totalSeats - data.noOfSeats });
+        booking.status = 'Booked';
+        await booking.save();
         return booking;
     } catch(error){
         if(error.name == 'RepositoryError' || error.name == 'ValidationError'){
